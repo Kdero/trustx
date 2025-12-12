@@ -54,7 +54,7 @@ export default function Orders() {
       if (createdAfter) params.append('created_after', createdAfter);
       if (createdBefore) params.append('created_before', createdBefore);
       
-      const response = await fetch(`http://127.0.0.1:8000/api/v1/orders/?${params}`, {
+      const response = await fetch(`/api/v1/orders/?${params}`, {
         headers: { Authorization: `Token ${token}` },
       });
       if (response.ok) {

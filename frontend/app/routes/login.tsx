@@ -40,7 +40,7 @@ export default function Login() {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/auth/login", {
+      const res = await axios.post("/api/v1/auth/login", {
         username,
         password
       });

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import DashboardLayout, { theme, Icon } from "../components/DashboardLayout";
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/v1";
+const API_URL = "/api/v1";
 
 export function meta({}: Route.MetaArgs) {
   return [

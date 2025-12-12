@@ -28,7 +28,7 @@ export default function Cabinet() {
       navigate("/login");
       return;
     }
-    fetch("http://127.0.0.1:8000/api/v1/payments/stats/", {
+    fetch("/api/v1/payments/stats/", {
       headers: { Authorization: `Token ${token}` },
     })
       .then((r) => r.json())
@@ -50,7 +50,7 @@ export default function Cabinet() {
   useEffect(() => {
     if (!token) return;
     // Load period analytics from API
-    fetch(`http://127.0.0.1:8000/api/v1/payments/analytics/?period=${chartPeriod}`, {
+    fetch(`/api/v1/payments/analytics/?period=${chartPeriod}`, {
       headers: { Authorization: `Token ${token}` },
     })
       .then((r) => r.json())

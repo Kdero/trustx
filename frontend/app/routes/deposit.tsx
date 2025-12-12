@@ -52,7 +52,7 @@ export default function Deposit() {
   const { token, username, balance } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const baseURL = "http://localhost:8000";
+  const baseURL = "";
 
   useEffect(() => {
     if (!username) {

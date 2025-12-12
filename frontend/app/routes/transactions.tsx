@@ -37,7 +37,7 @@ export default function Transactions() {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const baseURL = "http://localhost:8000";
+  const baseURL = "";
 
   useEffect(() => {
     if (!username) {

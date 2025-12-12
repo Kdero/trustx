@@ -44,7 +44,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
   const [deleting, setDeleting] = useState<number | null>(null);
   const [editing, setEditing] = useState<EditingLimits | null>(null);
   const [saving, setSaving] = useState(false);
-  const baseURL = 'http://localhost:8000';
+  const baseURL = '';
 
   const fetchRequisites = async () => {
     try {

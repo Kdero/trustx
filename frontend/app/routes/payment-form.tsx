@@ -253,7 +253,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const baseURL = 'http://localhost:8000';
+  const baseURL = '';
 
   const [formData, setFormData] = useState<FormData>({
     currency: 'RUB',
