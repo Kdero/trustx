@@ -1,0 +1,22 @@
+<svg width="160" height="48" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Logo Icon -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="xGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#a78bfa"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Shield Icon with T -->
+  <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#logoGradient)"/>
+  
+  <!-- T letter inside shield -->
+  <path d="M14 16H34V21H27V36H21V21H14V16Z" fill="white"/>
+  
+  <!-- Text: TrustX as single word -->
+  <text x="52" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" fill="#f4f4f5">Trust<tspan fill="url(#xGradient)" font-weight="800">X</tspan></text>
+</svg>
