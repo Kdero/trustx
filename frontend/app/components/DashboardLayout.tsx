@@ -67,6 +67,7 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
     "search": <><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>,
     "mail": <><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></>,
     "telegram": <><circle cx="12" cy="12" r="10"/><polygon points="8 12 12 14 16 10 12 12 8 10"/></>,
+    "trending-up": <><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></>,
   };
   
   return (

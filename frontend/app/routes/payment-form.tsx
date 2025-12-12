@@ -869,7 +869,6 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
                 onFocus={e => e.currentTarget.style.borderColor = theme.accent.primary}
                 onBlur={e => e.currentTarget.style.borderColor = theme.border.subtle}
               />
-              <div style={hintStyle}>Максимальное количество транзакций (1-1000)</div>
             </div>
 
             {/* Info Note */}
