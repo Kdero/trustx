@@ -19,6 +19,7 @@ python-telegram-bot>=20.0
 # Crypto
 cryptography>=41.0
 base58>=2.1
+ecdsa>=0.18
 
 # Async support
 aiohttp>=3.9
