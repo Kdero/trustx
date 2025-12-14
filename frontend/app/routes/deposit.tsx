@@ -567,16 +567,17 @@ export default function Deposit() {
           {/* Panel */}
           <div style={{
             position: "fixed",
-            top: 0,
+            top: isMobile ? 0 : 0,
             right: 0,
-            width: 440,
+            width: isMobile ? "100%" : 440,
             height: "100vh",
             background: theme.bg.sidebar,
-            borderLeft: `1px solid ${theme.border.subtle}`,
+            borderLeft: isMobile ? "none" : `1px solid ${theme.border.subtle}`,
             zIndex: 101,
             display: "flex",
             flexDirection: "column",
             animation: "slideIn 0.3s ease",
+            overflowY: "auto",
           }}>
             <style>{`
               @keyframes slideIn {
@@ -596,7 +597,7 @@ export default function Deposit() {
 
             {/* Panel Header */}
             <div style={{
-              padding: "20px 24px",
+              padding: isMobile ? "16px" : "20px 24px",
               borderBottom: `1px solid ${theme.border.subtle}`,
               display: "flex",
               alignItems: "center",
@@ -642,7 +643,7 @@ export default function Deposit() {
             </div>
 
             {/* Panel Content */}
-            <div style={{ flex: 1, overflowY: "auto", padding: 24 }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: isMobile ? 16 : 24 }}>
               {error && (
                 <div style={{
                   background: `${theme.accent.danger}15`,
@@ -818,9 +819,9 @@ export default function Deposit() {
 
                   {/* Timer */}
                   {payment.status === 'pending' && (
-                    <div style={{ textAlign: "center", marginBottom: 24 }}>
+                    <div style={{ textAlign: "center", marginBottom: isMobile ? 16 : 24 }}>
                       <div style={{
-                        fontSize: 48,
+                        fontSize: isMobile ? 36 : 48,
                         fontWeight: 700,
                         fontFamily: "monospace",
                         color: theme.accent.warning,
@@ -835,14 +836,14 @@ export default function Deposit() {
                   <div style={{
                     background: "white",
                     borderRadius: 16,
-                    padding: 16,
+                    padding: isMobile ? 12 : 16,
                     display: "flex",
                     justifyContent: "center",
                     marginBottom: 20,
                   }}>
                     <QRCodeSVG
                       value={payment.address}
-                      size={180}
+                      size={isMobile ? 160 : 180}
                       level="H"
                       includeMargin={false}
                       bgColor="#ffffff"
@@ -859,17 +860,19 @@ export default function Deposit() {
                       background: theme.bg.card,
                       border: `1px solid ${theme.border.subtle}`,
                       borderRadius: 10,
-                      padding: 14,
+                      padding: isMobile ? 12 : 14,
                       display: "flex",
                       alignItems: "center",
                       gap: 10,
+                      flexWrap: isMobile ? "wrap" : "nowrap",
                     }}>
                       <div style={{
                         flex: 1,
                         fontFamily: "monospace",
-                        fontSize: 12,
+                        fontSize: isMobile ? 11 : 12,
                         wordBreak: "break-all",
                         color: theme.text.secondary,
+                        minWidth: 0,
                       }}>
                         {payment.address}
                       </div>
@@ -888,6 +891,7 @@ export default function Deposit() {
                           alignItems: "center",
                           gap: 4,
                           whiteSpace: "nowrap",
+                          flexShrink: 0,
                         }}
                       >
                         <Icon name={copied ? "check" : "copy"} size={14} />
@@ -929,13 +933,13 @@ export default function Deposit() {
                   </div>
 
                   {/* Actions */}
-                  <div style={{ display: "flex", gap: 10 }}>
+                  <div style={{ display: "flex", gap: 10, flexDirection: isMobile ? "column" : "row" }}>
                     <button
                       onClick={checkPaymentStatus}
                       disabled={checkingStatus}
                       style={{
                         flex: 1,
-                        padding: 14,
+                        padding: isMobile ? 12 : 14,
                         background: `${theme.accent.info}15`,
                         color: theme.accent.info,
                         border: `1px solid ${theme.accent.info}30`,
@@ -956,7 +960,7 @@ export default function Deposit() {
                     <button
                       onClick={resetPayment}
                       style={{
-                        padding: "14px 20px",
+                        padding: isMobile ? "12px 20px" : "14px 20px",
                         background: theme.bg.card,
                         color: theme.text.secondary,
                         border: `1px solid ${theme.border.subtle}`,
@@ -976,7 +980,7 @@ export default function Deposit() {
             {/* Panel Footer - Create Button */}
             {!payment && (
               <div style={{
-                padding: 24,
+                padding: isMobile ? 16 : 24,
                 borderTop: `1px solid ${theme.border.subtle}`,
               }}>
                 <button
