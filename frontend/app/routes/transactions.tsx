@@ -33,11 +33,19 @@ export default function Transactions() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [period, setPeriod] = useState<PeriodType>('all');
   const [searchAmount, setSearchAmount] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
   const { token, username } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
   const baseURL = "";
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!username) {
@@ -136,18 +144,18 @@ export default function Transactions() {
       {/* Stats Cards */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 16,
-        marginBottom: 24,
+        gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+        gap: isMobile ? 12 : 16,
+        marginBottom: isMobile ? 16 : 24,
       }}>
         <div style={{
           background: theme.bg.card,
           borderRadius: 14,
-          padding: 20,
+          padding: isMobile ? 16 : 20,
           border: `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ fontSize: 13, color: theme.text.muted, marginBottom: 8 }}>{t("total_transactions")}</div>
-          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "monospace" }}>
+          <div style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, fontFamily: "monospace" }}>
             {filteredTransactions.length}
           </div>
         </div>
@@ -155,11 +163,11 @@ export default function Transactions() {
         <div style={{
           background: theme.bg.card,
           borderRadius: 14,
-          padding: 20,
+          padding: isMobile ? 16 : 20,
           border: `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ fontSize: 13, color: theme.text.muted, marginBottom: 8 }}>{t("total_income")}</div>
-          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.success }}>
+          <div style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.success }}>
             +${fmt(totalIncome)}
           </div>
         </div>
@@ -167,11 +175,11 @@ export default function Transactions() {
         <div style={{
           background: theme.bg.card,
           borderRadius: 14,
-          padding: 20,
+          padding: isMobile ? 16 : 20,
           border: `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ fontSize: 13, color: theme.text.muted, marginBottom: 8 }}>{t("total_expense")}</div>
-          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.danger }}>
+          <div style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.danger }}>
             -${fmt(totalExpense)}
           </div>
         </div>
@@ -180,8 +188,8 @@ export default function Transactions() {
       {/* Filters */}
       <div style={{
         display: "flex",
-        gap: 16,
-        marginBottom: 24,
+        gap: isMobile ? 8 : 16,
+        marginBottom: isMobile ? 16 : 24,
         flexWrap: "wrap",
         alignItems: "center",
       }}>

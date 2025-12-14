@@ -44,7 +44,15 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
   const [deleting, setDeleting] = useState<number | null>(null);
   const [editing, setEditing] = useState<EditingLimits | null>(null);
   const [saving, setSaving] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const baseURL = '';
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const fetchRequisites = async () => {
     try {
@@ -238,7 +246,9 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 24,
+        marginBottom: isMobile ? 16 : 24,
+        flexWrap: "wrap",
+        gap: 12,
       }}>
         <div style={{ fontSize: 14, color: theme.text.secondary }}>
           {requisites.length} {requisites.length === 1 ? 'реквизит' : requisites.length < 5 ? 'реквизита' : 'реквизитов'}
@@ -347,8 +357,8 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
         /* Requisites Grid */
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
-          gap: 20,
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(360px, 1fr))",
+          gap: isMobile ? 16 : 20,
         }}>
           {requisites.map(req => {
             const isEditing = editing?.id === req.id;

@@ -31,10 +31,18 @@ export default function Devices() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("success");
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const { token, username } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const baseURL = "";
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!username) {
@@ -166,15 +174,15 @@ export default function Devices() {
       <div style={{
         background: theme.bg.card,
         borderRadius: 16,
-        padding: 24,
+        padding: isMobile ? 16 : 24,
         border: `1px solid ${theme.border.subtle}`,
-        marginBottom: 24,
+        marginBottom: isMobile ? 16 : 24,
       }}>
         <div style={{ 
           display: "flex",
           alignItems: "center",
           gap: 12,
-          marginBottom: 24,
+          marginBottom: isMobile ? 16 : 24,
         }}>
           <div style={{
             width: 40,
@@ -188,13 +196,13 @@ export default function Devices() {
           }}>
             <Icon name="plus" size={20} />
           </div>
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
+          <h3 style={{ margin: 0, fontSize: isMobile ? 14 : 16, fontWeight: 600 }}>
             {t("add_device")}
           </h3>
         </div>
         
         <form onSubmit={handleAddDevice}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16, marginBottom: 20 }}>
             <div>
               <label style={{ 
                 display: "block", 
@@ -327,7 +335,7 @@ export default function Devices() {
         overflow: "hidden",
       }}>
         <div style={{ 
-          padding: "16px 24px", 
+          padding: isMobile ? "12px 16px" : "16px 24px", 
           borderBottom: `1px solid ${theme.border.subtle}`,
           display: "flex",
           justifyContent: "space-between",

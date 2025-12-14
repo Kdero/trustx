@@ -248,6 +248,14 @@ interface PaymentFormProps {
 
 export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) => {
   const { token } = useAuth();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   const [countries, setCountries] = useState<PaymentCountry[]>([]);
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(false);
@@ -520,10 +528,10 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
         position: "fixed",
         top: 0,
         right: 0,
-        width: 480,
+        width: isMobile ? "100%" : 480,
         height: "100vh",
         background: theme.bg.sidebar,
-        borderLeft: `1px solid ${theme.border.subtle}`,
+        borderLeft: isMobile ? "none" : `1px solid ${theme.border.subtle}`,
         zIndex: 101,
         display: "flex",
         flexDirection: "column",

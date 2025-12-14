@@ -80,6 +80,7 @@ export default function Admin() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('users');
+  const [isMobile, setIsMobile] = useState(false);
   const [balanceModal, setBalanceModal] = useState<BalanceModal>({
     isOpen: false,
     userId: null,
@@ -94,6 +95,13 @@ export default function Admin() {
   const navigate = useNavigate();
 
   const baseURL = "";
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   function showMessage(msg: string, type: "success" | "error") {
     setMessage(msg);
@@ -351,12 +359,13 @@ export default function Admin() {
       <div style={{
         display: "flex",
         gap: 8,
-        marginBottom: 24,
+        marginBottom: isMobile ? 16 : 24,
         background: theme.bg.card,
         padding: 6,
         borderRadius: 14,
         border: `1px solid ${theme.border.subtle}`,
-        width: "fit-content",
+        width: isMobile ? "100%" : "fit-content",
+        overflowX: "auto",
       }}>
         {tabs.map(tab => (
           <button
@@ -365,25 +374,26 @@ export default function Admin() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 8,
-              padding: "10px 20px",
+              gap: isMobile ? 4 : 8,
+              padding: isMobile ? "8px 12px" : "10px 20px",
               background: activeTab === tab.id ? theme.gradient.primary : "transparent",
               border: "none",
               borderRadius: 10,
               color: activeTab === tab.id ? "white" : theme.text.secondary,
-              fontSize: 14,
+              fontSize: isMobile ? 12 : 14,
               fontWeight: 500,
               cursor: "pointer",
               transition: "all 0.2s",
+              whiteSpace: "nowrap",
             }}
           >
-            <Icon name={tab.icon} size={18} />
-            {tab.label}
+            <Icon name={tab.icon} size={isMobile ? 14 : 18} />
+            {isMobile ? '' : tab.label}
             <span style={{
               background: activeTab === tab.id ? "rgba(255,255,255,0.2)" : theme.bg.input,
               padding: "2px 8px",
               borderRadius: 20,
-              fontSize: 12,
+              fontSize: isMobile ? 10 : 12,
             }}>
               {tab.count}
             </span>
@@ -400,7 +410,7 @@ export default function Admin() {
           overflow: "hidden",
         }}>
           <div style={{ 
-            padding: "16px 24px", 
+            padding: isMobile ? "12px 16px" : "16px 24px", 
             borderBottom: `1px solid ${theme.border.subtle}`,
             display: "flex",
             justifyContent: "space-between",
@@ -419,12 +429,13 @@ export default function Admin() {
               }}>
                 <Icon name="users" size={20} />
               </div>
-              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
+              <h3 style={{ margin: 0, fontSize: isMobile ? 14 : 16, fontWeight: 600 }}>
                 {t("users")}
               </h3>
             </div>
           </div>
 
+          <div style={{ overflowX: "auto" }}>
           {/* Table Header */}
           <div style={{
             display: "grid",
@@ -438,6 +449,7 @@ export default function Admin() {
             textTransform: "uppercase",
             letterSpacing: "0.05em",
             gap: 8,
+            minWidth: 800,
           }}>
             <div>ID</div>
             <div>{t("username")}</div>
@@ -460,6 +472,7 @@ export default function Admin() {
                 alignItems: "center",
                 transition: "background 0.15s",
                 gap: 8,
+                minWidth: 800,
               }}
               onMouseOver={e => e.currentTarget.style.background = theme.bg.cardHover}
               onMouseOut={e => e.currentTarget.style.background = "transparent"}
@@ -583,6 +596,7 @@ export default function Admin() {
               </div>
             </div>
           ))}
+          </div>
         </div>
       )}
 
@@ -595,7 +609,7 @@ export default function Admin() {
           overflow: "hidden",
         }}>
           <div style={{ 
-            padding: "16px 24px", 
+            padding: isMobile ? "12px 16px" : "16px 24px", 
             borderBottom: `1px solid ${theme.border.subtle}`,
             display: "flex",
             alignItems: "center",
@@ -623,7 +637,7 @@ export default function Admin() {
               No merchants registered
             </div>
           ) : (
-            <>
+            <div style={{ overflowX: "auto" }}>
               <div style={{
                 display: "grid",
                 gridTemplateColumns: "80px 1fr 250px 1fr",
@@ -634,6 +648,7 @@ export default function Admin() {
                 fontWeight: 600,
                 color: theme.text.muted,
                 textTransform: "uppercase",
+                minWidth: 600,
               }}>
                 <div>ID</div>
                 <div>Name</div>
@@ -650,6 +665,7 @@ export default function Admin() {
                     padding: "16px 24px",
                     borderBottom: index < merchants.length - 1 ? `1px solid ${theme.border.subtle}` : "none",
                     alignItems: "center",
+                    minWidth: 600,
                   }}
                 >
                   <div style={{ fontFamily: "monospace", color: theme.text.muted }}>#{merchant.id}</div>
@@ -669,7 +685,7 @@ export default function Admin() {
                   </div>
                 </div>
               ))}
-            </>
+            </div>
           )}
         </div>
       )}
@@ -683,7 +699,7 @@ export default function Admin() {
           overflow: "hidden",
         }}>
           <div style={{ 
-            padding: "16px 24px", 
+            padding: isMobile ? "12px 16px" : "16px 24px", 
             borderBottom: `1px solid ${theme.border.subtle}`,
             display: "flex",
             alignItems: "center",
@@ -701,7 +717,7 @@ export default function Admin() {
             }}>
               <Icon name="activity" size={20} />
             </div>
-            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
+            <h3 style={{ margin: 0, fontSize: isMobile ? 14 : 16, fontWeight: 600 }}>
               {t("payments")}
             </h3>
           </div>
@@ -711,7 +727,7 @@ export default function Admin() {
               No payments yet
             </div>
           ) : (
-            <>
+            <div style={{ overflowX: "auto" }}>
               <div style={{
                 display: "grid",
                 gridTemplateColumns: "80px 1fr 120px 80px 120px 150px",
@@ -722,6 +738,7 @@ export default function Admin() {
                 fontWeight: 600,
                 color: theme.text.muted,
                 textTransform: "uppercase",
+                minWidth: 700,
               }}>
                 <div>ID</div>
                 <div>Merchant</div>
@@ -767,7 +784,7 @@ export default function Admin() {
                   </div>
                 </div>
               ))}
-            </>
+            </div>
           )}
         </div>
       )}
@@ -781,11 +798,13 @@ export default function Admin() {
           overflow: "hidden",
         }}>
           <div style={{ 
-            padding: "16px 24px", 
+            padding: isMobile ? "12px 16px" : "16px 24px", 
             borderBottom: `1px solid ${theme.border.subtle}`,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            flexWrap: "wrap",
+            gap: 12,
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <div style={{
@@ -800,7 +819,7 @@ export default function Admin() {
               }}>
                 <Icon name="download" size={20} />
               </div>
-              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
+              <h3 style={{ margin: 0, fontSize: isMobile ? 14 : 16, fontWeight: 600 }}>
                 Крипто депозиты
               </h3>
             </div>
@@ -829,7 +848,7 @@ export default function Admin() {
               Нет заявок на депозит
             </div>
           ) : (
-            <>
+            <div style={{ overflowX: "auto" }}>
               <div style={{
                 display: "grid",
                 gridTemplateColumns: "90px 1fr 100px 100px 100px 100px 140px",
@@ -842,6 +861,7 @@ export default function Admin() {
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
                 gap: 8,
+                minWidth: 800,
               }}>
                 <div>ID</div>
                 <div>Пользователь</div>
@@ -863,6 +883,7 @@ export default function Admin() {
                     alignItems: "center",
                     transition: "background 0.15s",
                     gap: 8,
+                    minWidth: 800,
                   }}
                   onMouseOver={e => e.currentTarget.style.background = theme.bg.cardHover}
                   onMouseOut={e => e.currentTarget.style.background = "transparent"}
@@ -986,7 +1007,7 @@ export default function Admin() {
                   </div>
                 </div>
               ))}
-            </>
+            </div>
           )}
         </div>
       )}

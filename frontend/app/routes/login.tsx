@@ -1,5 +1,5 @@
 import type { Route } from "./+types/login";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
 import axios from "axios";
 import type { AxiosError } from "axios";
@@ -27,8 +27,16 @@ export default function Login() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const { setAuthData } = useAuth();
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   async function handleLogin() {
     if (!username || !password) {
@@ -126,14 +134,14 @@ export default function Login() {
         width: "100%",
         maxWidth: 420,
         background: theme.bg.card,
-        borderRadius: 20,
-        padding: 40,
+        borderRadius: isMobile ? 16 : 20,
+        padding: isMobile ? 24 : 40,
         border: `1px solid ${theme.border.subtle}`,
         boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
       }}>
         {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 32, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <svg width="56" height="56" viewBox="0 0 48 48" fill="none" style={{ marginBottom: 16, filter: "drop-shadow(0 8px 24px rgba(99, 102, 241, 0.3))" }}>
+        <div style={{ textAlign: "center", marginBottom: isMobile ? 24 : 32, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <svg width={isMobile ? 48 : 56} height={isMobile ? 48 : 56} viewBox="0 0 48 48" fill="none" style={{ marginBottom: isMobile ? 12 : 16, filter: "drop-shadow(0 8px 24px rgba(99, 102, 241, 0.3))" }}>
             <defs>
               <linearGradient id="loginLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" style={{ stopColor: "#6366f1" }}/>
@@ -145,7 +153,7 @@ export default function Login() {
           </svg>
           <h1 style={{
             margin: 0,
-            fontSize: 28,
+            fontSize: isMobile ? 24 : 28,
             fontWeight: 700,
             color: theme.text.primary,
             marginBottom: 8,

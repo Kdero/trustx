@@ -34,9 +34,17 @@ export default function Orders() {
   const [createdBefore, setCreatedBefore] = useState('');
   const [createdAfter, setCreatedAfter] = useState('');
   const [showDepositSidebar, setShowDepositSidebar] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { token, username } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!username) {
@@ -170,15 +178,15 @@ export default function Orders() {
           position: "fixed",
           top: 0,
           right: 0,
-          width: 400,
+          width: isMobile ? "100%" : 400,
           height: "100vh",
           background: theme.bg.card,
           boxShadow: "-8px 0 32px #0008",
           zIndex: 999,
           display: "flex",
           flexDirection: "column",
-          padding: 32,
-          borderLeft: `1px solid ${theme.border.subtle}`,
+          padding: isMobile ? 20 : 32,
+          borderLeft: isMobile ? "none" : `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
             <span style={{ fontSize: 20, fontWeight: 700 }}>{t("create_deposit")}</span>
@@ -284,8 +292,9 @@ export default function Orders() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: 16,
-            padding: "16px 20px",
+            flexWrap: "wrap",
+            gap: isMobile ? 12 : 16,
+            padding: isMobile ? "12px 16px" : "16px 20px",
             background: `linear-gradient(135deg, ${theme.accent.primary}12 0%, ${theme.accent.secondary}08 100%)`,
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

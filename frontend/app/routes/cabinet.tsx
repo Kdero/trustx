@@ -15,6 +15,14 @@ export default function Cabinet() {
   const [showDepositSidebar, setShowDepositSidebar] = useState(false);
   const [depositMerchant, setDepositMerchant] = useState("");
   const [depositAmount, setDepositAmount] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Stats
   const [stats, setStats] = useState({
@@ -67,12 +75,17 @@ export default function Cabinet() {
   return (
     <DashboardLayout title={t("dashboard")} subtitle={t("analytics")}>
       {/* Balance Cards Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, marginBottom: 32 }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", 
+        gap: isMobile ? 16 : 20, 
+        marginBottom: isMobile ? 20 : 32 
+      }}>
         {/* Main Balance */}
         <div style={{
           background: theme.bg.card,
           borderRadius: 16,
-          padding: 24,
+          padding: isMobile ? 16 : 24,
           border: `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -92,14 +105,14 @@ export default function Cabinet() {
           </div>
           <div style={{
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 32,
+            fontSize: isMobile ? 24 : 32,
             fontWeight: 700,
             letterSpacing: "-0.02em",
             marginBottom: 16,
           }}>
-            {fmt(stats.current_balance)} <span style={{ fontSize: 16, color: theme.text.muted }}>USDT</span>
+            {fmt(stats.current_balance)} <span style={{ fontSize: isMobile ? 12 : 16, color: theme.text.muted }}>USDT</span>
           </div>
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 10, flexDirection: isMobile ? "column" : "row" }}>
             <button
               onClick={() => navigate("/deposit")}
               style={{
@@ -153,7 +166,7 @@ export default function Cabinet() {
         <div style={{
           background: theme.bg.card,
           borderRadius: 16,
-          padding: 24,
+          padding: isMobile ? 16 : 24,
           border: `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -173,12 +186,12 @@ export default function Cabinet() {
           </div>
           <div style={{
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 32,
+            fontSize: isMobile ? 24 : 32,
             fontWeight: 700,
             letterSpacing: "-0.02em",
             marginBottom: 8,
           }}>
-            {fmt(stats.frozen_deposit)} <span style={{ fontSize: 16, color: theme.text.muted }}>USDT</span>
+            {fmt(stats.frozen_deposit)} <span style={{ fontSize: isMobile ? 12 : 16, color: theme.text.muted }}>USDT</span>
           </div>
           <span style={{ fontSize: 13, color: theme.text.muted }}>{t("in_processing")}</span>
         </div>
@@ -187,11 +200,11 @@ export default function Cabinet() {
         <div style={{
           background: theme.bg.card,
           borderRadius: 16,
-          padding: 24,
+          padding: isMobile ? 16 : 24,
           border: `1px solid ${theme.border.subtle}`,
           position: "relative",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
             <div style={{
               width: 40,
               height: 40,
@@ -203,7 +216,7 @@ export default function Cabinet() {
             }}>
               <Icon name="trending-up" />
             </div>
-            <span style={{ color: theme.text.primary, fontWeight: 600, fontSize: 18 }}>{t("net_pl")}</span>
+            <span style={{ color: theme.text.primary, fontWeight: 600, fontSize: isMobile ? 16 : 18 }}>{t("net_pl")}</span>
             <div style={{ flex: 1 }} />
             {/* Period Switcher */}
             <div style={{ display: "flex", gap: 4 }}>
@@ -212,8 +225,8 @@ export default function Cabinet() {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   style={{
-                    padding: "6px 12px",
-                    fontSize: 12,
+                    padding: isMobile ? "4px 8px" : "6px 12px",
+                    fontSize: isMobile ? 11 : 12,
                     fontWeight: 500,
                     color: activeTab === tab ? theme.text.primary : theme.text.muted,
                     background: activeTab === tab ? theme.bg.card : "transparent",
@@ -228,34 +241,34 @@ export default function Cabinet() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-            <span style={{ color: theme.accent.success, fontWeight: 700, fontSize: 32 }}>
+            <span style={{ color: theme.accent.success, fontWeight: 700, fontSize: isMobile ? 24 : 32 }}>
               +{fmt(currentData.net)}
             </span>
-            <span style={{ color: theme.text.muted, fontSize: 18, fontWeight: 500 }}>USDT</span>
+            <span style={{ color: theme.text.muted, fontSize: isMobile ? 14 : 18, fontWeight: 500 }}>USDT</span>
           </div>
-          <div style={{ color: theme.text.muted, fontSize: 15, marginBottom: 18 }}>{t("profit")}</div>
+          <div style={{ color: theme.text.muted, fontSize: isMobile ? 13 : 15, marginBottom: 18 }}>{t("profit")}</div>
         </div>
       </div>
 
       {/* Charts & Analytics Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 20, marginBottom: 32 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "2fr 1fr", gap: isMobile ? 16 : 20, marginBottom: isMobile ? 20 : 32 }}>
         {/* Income Chart */}
         <div style={{
           background: theme.bg.card,
           borderRadius: 16,
-          padding: 24,
+          padding: isMobile ? 16 : 24,
           border: `1px solid ${theme.border.subtle}`,
         }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-            <h2 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>{t("income")}</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isMobile ? 16 : 24, flexWrap: "wrap", gap: 12 }}>
+            <h2 style={{ fontSize: isMobile ? 14 : 16, fontWeight: 600, margin: 0 }}>{t("income")}</h2>
             <div style={{ display: "flex", gap: 4, background: theme.bg.dark, padding: 4, borderRadius: 8 }}>
               {(['month', 'week', 'day'] as const).map((period) => (
                 <button
                   key={period}
                   onClick={() => setChartPeriod(period)}
                   style={{
-                    padding: "6px 14px",
-                    fontSize: 12,
+                    padding: isMobile ? "4px 10px" : "6px 14px",
+                    fontSize: isMobile ? 11 : 12,
                     fontWeight: 500,
                     color: chartPeriod === period ? theme.text.primary : theme.text.muted,
                     background: chartPeriod === period ? theme.bg.card : "transparent",
@@ -375,10 +388,10 @@ export default function Cabinet() {
         <div style={{
           background: theme.bg.card,
           borderRadius: 16,
-          padding: 24,
+          padding: isMobile ? 16 : 24,
           border: `1px solid ${theme.border.subtle}`,
         }}>
-          <h2 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 20px 0" }}>{t("analytics")}</h2>
+          <h2 style={{ fontSize: isMobile ? 14 : 16, fontWeight: 600, margin: isMobile ? "0 0 16px 0" : "0 0 20px 0" }}>{t("analytics")}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {/* Income */}
             <div>

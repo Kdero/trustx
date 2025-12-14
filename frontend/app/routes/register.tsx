@@ -47,12 +47,20 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
       navigate("/cabinet");
     }
   }, [currentUser, navigate]);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,8 +182,8 @@ export default function Register() {
           width: "100%",
           maxWidth: "420px",
           backgroundColor: theme.bg.card,
-          borderRadius: "20px",
-          padding: "40px",
+          borderRadius: isMobile ? "16px" : "20px",
+          padding: isMobile ? "24px" : "40px",
           boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
           border: `1px solid ${theme.border.subtle}`,
           position: "relative",
@@ -186,7 +194,7 @@ export default function Register() {
         <div
           style={{
             textAlign: "center",
-            marginBottom: "32px",
+            marginBottom: isMobile ? "24px" : "32px",
           }}
         >
           <div

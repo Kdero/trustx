@@ -2,6 +2,7 @@ import React, { type JSX } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useState, useEffect } from "react";
 
 // === TRUSTX DESIGN SYSTEM ===
 export const theme = {
@@ -110,6 +111,20 @@ export default function DashboardLayout({ children, title, subtitle, headerExtra
   const { t, lang, setLang } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Close sidebar when navigating on mobile
+  useEffect(() => {
+    if (isMobile) setSidebarOpen(false);
+  }, [location.pathname, isMobile]);
   
   const navItems = getNavItems(role || "user");
   const activeNav = navItems.find(item => item.path === location.pathname)?.id || "dashboard";
@@ -129,6 +144,75 @@ export default function DashboardLayout({ children, title, subtitle, headerExtra
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       display: "flex",
     }}>
+      {/* Mobile Header */}
+      {isMobile && (
+        <header style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 60,
+          background: theme.bg.sidebar,
+          borderBottom: `1px solid ${theme.border.subtle}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 16px",
+          zIndex: 200,
+        }}>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: "none",
+              border: "none",
+              color: theme.text.primary,
+              padding: 8,
+              cursor: "pointer",
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+              <defs>
+                <linearGradient id="mobileLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: "#6366f1" }}/>
+                  <stop offset="100%" style={{ stopColor: "#8b5cf6" }}/>
+                </linearGradient>
+              </defs>
+              <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#mobileLogoGradient)"/>
+              <path d="M14 14H34V20H27V36H21V20H14V14Z" fill="white"/>
+            </svg>
+            <span style={{ fontWeight: 700, fontSize: 16 }}>Trust<span style={{ color: theme.accent.primary }}>X</span></span>
+          </div>
+          <div style={{ 
+            fontSize: 12, 
+            color: theme.accent.success,
+            fontFamily: "monospace",
+            fontWeight: 600,
+          }}>
+            {fmt(balance || 0)}
+          </div>
+        </header>
+      )}
+
+      {/* Mobile Overlay */}
+      {isMobile && sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.6)",
+            zIndex: 150,
+          }}
+        />
+      )}
+
       {/* Sidebar */}
       <aside style={{
         width: 240,
@@ -138,7 +222,9 @@ export default function DashboardLayout({ children, title, subtitle, headerExtra
         flexDirection: "column",
         position: "fixed",
         height: "100vh",
-        zIndex: 100,
+        zIndex: 200,
+        transform: isMobile ? (sidebarOpen ? "translateX(0)" : "translateX(-100%)") : "none",
+        transition: "transform 0.3s ease",
       }}>
         {/* Logo */}
         <div style={{ padding: "20px 16px", borderBottom: `1px solid ${theme.border.subtle}` }}>
@@ -318,7 +404,14 @@ export default function DashboardLayout({ children, title, subtitle, headerExtra
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, marginLeft: 240, position: "relative", overflow: "hidden" }}>
+      <main style={{ 
+        flex: 1, 
+        marginLeft: isMobile ? 0 : 240, 
+        marginTop: isMobile ? 60 : 0,
+        position: "relative", 
+        overflow: "hidden",
+        minHeight: isMobile ? "calc(100vh - 60px)" : "100vh",
+      }}>
         {/* Background decorative elements */}
         <div
           style={{
@@ -344,14 +437,21 @@ export default function DashboardLayout({ children, title, subtitle, headerExtra
             filter: "blur(60px)",
           }}
         />
-        <div style={{ padding: 32, position: "relative", zIndex: 1 }}>
+        <div style={{ padding: isMobile ? 16 : 32, position: "relative", zIndex: 1 }}>
           {/* Page Title + Extra */}
-          <div style={{ marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>
+          <div style={{ 
+            marginBottom: isMobile ? 16 : 24, 
+            display: "flex", 
+            alignItems: isMobile ? "flex-start" : "center", 
+            justifyContent: "space-between", 
+            gap: 16,
+            flexDirection: isMobile ? "column" : "row",
+          }}>
+            <h1 style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>
               {title}
             </h1>
             {headerExtra && (
-              <div>{headerExtra}</div>
+              <div style={{ width: isMobile ? "100%" : "auto" }}>{headerExtra}</div>
             )}
           </div>
           {subtitle && (

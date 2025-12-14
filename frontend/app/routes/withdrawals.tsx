@@ -31,11 +31,19 @@ export default function Withdrawals() {
   const [success, setSuccess] = useState<string | null>(null);
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { token, username, balance, refreshUser } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const baseURL = "";
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!username) {
@@ -174,21 +182,21 @@ export default function Withdrawals() {
 
   return (
     <DashboardLayout title={t("withdrawal")} subtitle={t("withdraw_usdt_trc20")}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 16 : 24 }}>
         {/* Left: Withdrawal Form */}
         <div
           style={{
             background: theme.bg.card,
             borderRadius: 16,
-            padding: 24,
+            padding: isMobile ? 16 : 24,
             border: `1px solid ${theme.border.subtle}`,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: isMobile ? 16 : 24 }}>
             <div
               style={{
-                width: 48,
-                height: 48,
+                width: isMobile ? 40 : 48,
+                height: isMobile ? 40 : 48,
                 borderRadius: 12,
                 background: theme.gradient.primary,
                 display: "flex",
@@ -196,7 +204,7 @@ export default function Withdrawals() {
                 justifyContent: "center",
               }}
             >
-              <Icon name="upload" size={24} />
+              <Icon name="upload" size={isMobile ? 20 : 24} />
             </div>
             <div>
               <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>{t("create_withdrawal")}</h2>
@@ -392,11 +400,11 @@ export default function Withdrawals() {
           style={{
             background: theme.bg.card,
             borderRadius: 16,
-            padding: 24,
+            padding: isMobile ? 16 : 24,
             border: `1px solid ${theme.border.subtle}`,
           }}
         >
-          <h2 style={{ margin: "0 0 20px", fontSize: 18, fontWeight: 600 }}>{t("withdrawal_history")}</h2>
+          <h2 style={{ margin: isMobile ? "0 0 16px" : "0 0 20px", fontSize: isMobile ? 16 : 18, fontWeight: 600 }}>{t("withdrawal_history")}</h2>
 
           {loadingHistory ? (
             <div style={{ textAlign: "center", padding: 40, color: theme.text.muted }}>{t("loading")}...</div>

@@ -48,11 +48,19 @@ export default function Deposit() {
   const [deposits, setDeposits] = useState<DepositHistory[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [frozenDeposit, setFrozenDeposit] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   
   const { token, username, balance } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const baseURL = "";
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!username) {
@@ -251,18 +259,18 @@ export default function Deposit() {
       {/* Stats Cards */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 16,
-        marginBottom: 24,
+        gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+        gap: isMobile ? 12 : 16,
+        marginBottom: isMobile ? 16 : 24,
       }}>
         <div style={{
           background: theme.bg.card,
           borderRadius: 14,
-          padding: 20,
+          padding: isMobile ? 16 : 20,
           border: `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ fontSize: 13, color: theme.text.muted, marginBottom: 8 }}>{t("available_balance")}</div>
-          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.success }}>
+          <div style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.success }}>
             ${fmt(balance || 0)}
           </div>
         </div>
@@ -270,11 +278,11 @@ export default function Deposit() {
         <div style={{
           background: theme.bg.card,
           borderRadius: 14,
-          padding: 20,
+          padding: isMobile ? 16 : 20,
           border: `1px solid ${theme.border.subtle}`,
         }}>
           <div style={{ fontSize: 13, color: theme.text.muted, marginBottom: 8 }}>{t("frozen")}</div>
-          <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.warning }}>
+          <div style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, fontFamily: "monospace", color: theme.accent.warning }}>
             ${fmt(frozenDeposit)}
           </div>
         </div>
@@ -282,7 +290,7 @@ export default function Deposit() {
         <div style={{
           background: theme.gradient.primary,
           borderRadius: 14,
-          padding: 20,
+          padding: isMobile ? 16 : 20,
           cursor: "pointer",
           transition: "transform 0.2s, box-shadow 0.2s",
           display: "flex",
@@ -294,8 +302,8 @@ export default function Deposit() {
         onMouseOver={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(99, 102, 241, 0.4)"; }}
         onMouseOut={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
         >
-          <Icon name="plus" size={24} />
-          <span style={{ fontSize: 16, fontWeight: 600 }}>{t("create_deposit")}</span>
+          <Icon name="plus" size={isMobile ? 20 : 24} />
+          <span style={{ fontSize: isMobile ? 14 : 16, fontWeight: 600 }}>{t("create_deposit")}</span>
         </div>
       </div>
 
@@ -369,27 +377,73 @@ export default function Deposit() {
           </div>
         ) : deposits.length > 0 ? (
           <>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "90px 1fr 110px 100px 110px",
-              padding: "12px 24px",
-              background: theme.bg.input,
-              borderBottom: `1px solid ${theme.border.subtle}`,
-              fontSize: 11,
-              fontWeight: 600,
-              color: theme.text.muted,
-              textTransform: "uppercase",
-              gap: 12,
-            }}>
-              <div>ID</div>
-              <div>{t("address")}</div>
-              <div style={{ textAlign: "right" }}>{t("amount")}</div>
-              <div style={{ textAlign: "right" }}>{t("date")}</div>
-              <div style={{ textAlign: "right" }}>{t("status")}</div>
-            </div>
+            {!isMobile && (
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "90px 1fr 110px 100px 110px",
+                padding: "12px 24px",
+                background: theme.bg.input,
+                borderBottom: `1px solid ${theme.border.subtle}`,
+                fontSize: 11,
+                fontWeight: 600,
+                color: theme.text.muted,
+                textTransform: "uppercase",
+                gap: 12,
+              }}>
+                <div>ID</div>
+                <div>{t("address")}</div>
+                <div style={{ textAlign: "right" }}>{t("amount")}</div>
+                <div style={{ textAlign: "right" }}>{t("date")}</div>
+                <div style={{ textAlign: "right" }}>{t("status")}</div>
+              </div>
+            )}
 
             {deposits.map((dep, index) => {
               const statusInfo = getStatusInfo(dep.status);
+              
+              if (isMobile) {
+                return (
+                  <div
+                    key={dep.id}
+                    style={{
+                      padding: 16,
+                      borderBottom: index < deposits.length - 1 ? `1px solid ${theme.border.subtle}` : "none",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                      <span style={{
+                        fontFamily: "monospace",
+                        fontSize: 11,
+                        padding: "4px 8px",
+                        background: `${theme.accent.secondary}15`,
+                        color: theme.accent.secondary,
+                        borderRadius: 6,
+                      }}>
+                        {dep.payment_id}
+                      </span>
+                      <span style={{
+                        fontSize: 10,
+                        fontWeight: 600,
+                        padding: "4px 8px",
+                        borderRadius: 20,
+                        background: `${statusInfo.color}20`,
+                        color: statusInfo.color,
+                      }}>
+                        {statusInfo.text}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontFamily: "monospace", fontWeight: 600, color: theme.accent.success, fontSize: 16 }}>
+                        +${fmt(parseFloat(dep.amount) || 0)}
+                      </span>
+                      <span style={{ fontSize: 12, color: theme.text.muted }}>
+                        {dep.created_at ? new Date(dep.created_at).toLocaleDateString() : '-'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              }
+              
               return (
                 <div
                   key={dep.id}

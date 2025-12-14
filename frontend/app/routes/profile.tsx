@@ -36,6 +36,14 @@ export default function Profile() {
   const [message, setMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!token) {
@@ -213,11 +221,11 @@ export default function Profile() {
 
   return (
     <DashboardLayout title={t("profile")}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 16 : 24 }}>
         {/* Left Column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 16 : 24 }}>
           {/* Profile Info Card */}
-          <div style={cardStyle}>
+          <div style={{ ...cardStyle, padding: isMobile ? 16 : 24 }}>
             <h3 style={{ margin: "0 0 20px 0", fontSize: 18, fontWeight: 600, color: theme.text.primary }}>
               {t("your_profile")}
             </h3>
@@ -269,12 +277,12 @@ export default function Profile() {
           </div>
 
           {/* Change Password Card */}
-          <div style={cardStyle}>
-            <h3 style={{ margin: "0 0 20px 0", fontSize: 18, fontWeight: 600, color: theme.text.primary }}>
+          <div style={{ ...cardStyle, padding: isMobile ? 16 : 24 }}>
+            <h3 style={{ margin: "0 0 20px 0", fontSize: isMobile ? 16 : 18, fontWeight: 600, color: theme.text.primary }}>
               {t("change_password")}
             </h3>
             
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16, marginBottom: 20 }}>
               <div>
                 <label style={labelStyle}>{t("current_password")}</label>
                 <input
@@ -336,8 +344,8 @@ export default function Profile() {
         </div>
 
         {/* Right Column - Contacts */}
-        <div style={cardStyle}>
-          <h3 style={{ margin: "0 0 20px 0", fontSize: 18, fontWeight: 600, color: theme.text.primary }}>
+        <div style={{ ...cardStyle, padding: isMobile ? 16 : 24 }}>
+          <h3 style={{ margin: "0 0 20px 0", fontSize: isMobile ? 16 : 18, fontWeight: 600, color: theme.text.primary }}>
             {t("contacts")}
           </h3>
           
