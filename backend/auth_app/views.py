@@ -848,12 +848,42 @@ class ConvertCurrencyView(APIView):
 class GetPaymentCountriesView(APIView):
     """Получить список доступных стран для платежей"""
     
+    DEFAULT_COUNTRIES = [
+        {'name': 'Абхазия', 'code': 'AB', 'flag': '🇺🇳', 'is_active': True},
+        {'name': 'Аргентина', 'code': 'AR', 'flag': '🇦🇷', 'is_active': True},
+        {'name': 'Армения', 'code': 'AM', 'flag': '🇦🇲', 'is_active': True},
+        {'name': 'Азербайджан', 'code': 'AZ', 'flag': '🇦🇿', 'is_active': True},
+        {'name': 'Беларусь', 'code': 'BY', 'flag': '🇧🇾', 'is_active': True},
+        {'name': 'Кипр', 'code': 'CY', 'flag': '🇨🇾', 'is_active': True},
+        {'name': 'Казахстан', 'code': 'KZ', 'flag': '🇰🇿', 'is_active': True},
+        {'name': 'Киргизия', 'code': 'KG', 'flag': '🇰🇬', 'is_active': True},
+        {'name': 'Польша', 'code': 'PL', 'flag': '🇵🇱', 'is_active': True},
+        {'name': 'Россия', 'code': 'RU', 'flag': '🇷🇺', 'is_active': True},
+        {'name': 'Сербия', 'code': 'RS', 'flag': '🇷🇸', 'is_active': True},
+        {'name': 'Словакия', 'code': 'SK', 'flag': '🇸🇰', 'is_active': True},
+        {'name': 'Таджикистан', 'code': 'TJ', 'flag': '🇹🇯', 'is_active': True},
+        {'name': 'Украина', 'code': 'UA', 'flag': '🇺🇦', 'is_active': True},
+        {'name': 'Узбекистан', 'code': 'UZ', 'flag': '🇺🇿', 'is_active': True},
+    ]
+    
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+    def ensure_countries_exist(self):
+        """Создает страны если их нет в базе"""
+        if PaymentCountry.objects.count() == 0:
+            for country_data in self.DEFAULT_COUNTRIES:
+                PaymentCountry.objects.get_or_create(
+                    code=country_data['code'],
+                    defaults=country_data
+                )
     
     def get(self, request):
         """Получает все активные страны"""
         try:
+            # Автоматически создаем страны если их нет
+            self.ensure_countries_exist()
+            
             countries = PaymentCountry.objects.filter(is_active=True)
             serializer = PaymentCountrySerializer(countries, many=True)
             
