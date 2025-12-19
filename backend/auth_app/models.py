@@ -138,6 +138,7 @@ class PaymentRequisite(models.Model):
     CURRENCY_CHOICES = [
         ('USD', 'USD'),
         ('RUB', 'RUB'),
+        ('UAH', 'UAH'),
     ]
     
     METHOD_CHOICES = [
