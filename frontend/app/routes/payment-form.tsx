@@ -799,7 +799,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
             {/* Limits Row */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
               <div>
-                <label style={labelStyle}>Мин. лимит (USD) *</label>
+                <label style={labelStyle}>Мин. лимит *</label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="number"
@@ -819,7 +819,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
                 <div style={hintStyle}>Минимум 10</div>
               </div>
               <div>
-                <label style={labelStyle}>Макс. лимит (USD) *</label>
+                <label style={labelStyle}>Макс. лимит *</label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="number"
