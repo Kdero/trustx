@@ -509,7 +509,9 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
                         <div style={{ fontSize: 11, color: theme.text.muted, marginBottom: 6 }}>Мин. сумма</div>
                         {isEditing ? (
                           <div style={{ position: "relative" }}>
-                            <span style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: theme.text.muted, fontSize: 12 }}>$</span>
+                            <span style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: theme.text.muted, fontSize: 12 }}>
+                              {req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}
+                            </span>
                             <input
                               type="number"
                               value={editing.min_limit}
@@ -521,7 +523,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
                           </div>
                         ) : (
                           <div style={{ fontSize: 16, fontWeight: 700, color: theme.accent.primary, fontFamily: "monospace" }}>
-                            ${formatLimit(req.min_limit)}
+                            {req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}{formatLimit(req.min_limit)}
                           </div>
                         )}
                       </div>
@@ -530,7 +532,9 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
                         <div style={{ fontSize: 11, color: theme.text.muted, marginBottom: 6 }}>Макс. сумма</div>
                         {isEditing ? (
                           <div style={{ position: "relative" }}>
-                            <span style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: theme.text.muted, fontSize: 12 }}>$</span>
+                            <span style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: theme.text.muted, fontSize: 12 }}>
+                              {req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}
+                            </span>
                             <input
                               type="number"
                               value={editing.max_limit}
@@ -542,7 +546,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
                           </div>
                         ) : (
                           <div style={{ fontSize: 16, fontWeight: 700, color: theme.accent.primary, fontFamily: "monospace" }}>
-                            ${formatLimit(req.max_limit)}
+                            {req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}{formatLimit(req.max_limit)}
                           </div>
                         )}
                       </div>
