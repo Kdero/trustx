@@ -523,7 +523,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
                           </div>
                         ) : (
                           <div style={{ fontSize: 16, fontWeight: 700, color: theme.accent.primary, fontFamily: "monospace" }}>
-                            {req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}{formatLimit(req.min_limit)}
+                            <span style={{ marginLeft: 6 }}>{req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}{formatLimit(req.min_limit)}</span>
                           </div>
                         )}
                       </div>
@@ -546,7 +546,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
                           </div>
                         ) : (
                           <div style={{ fontSize: 16, fontWeight: 700, color: theme.accent.primary, fontFamily: "monospace" }}>
-                            {req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}{formatLimit(req.max_limit)}
+                            <span style={{ marginLeft: 6 }}>{req.currency === 'USD' ? '$' : req.currency === 'RUB' ? '₽' : req.currency === 'UAH' ? '₴' : req.currency}{formatLimit(req.max_limit)}</span>
                           </div>
                         )}
                       </div>

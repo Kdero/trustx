@@ -397,13 +397,13 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
       const maxLimit = parseFloat(formData.max_limit);
 
       if (minLimit < 10) {
-        setError('Минимальный лимит должен быть не менее $10');
+        setError('Минимальный лимит должен быть не менее 10');
         setLoading(false);
         return;
       }
 
       if (maxLimit > 1000) {
-        setError('Максимальный лимит не может превышать $1000');
+        setError('Максимальный лимит не может превышать 1000');
         setLoading(false);
         return;
       }
@@ -811,23 +811,12 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
                     max="1000"
                     step="0.01"
                     required
-                    style={{
-                      ...inputStyle,
-                      paddingLeft: 32,
-                    }}
+                    style={inputStyle}
                     onFocus={e => e.currentTarget.style.borderColor = theme.accent.primary}
                     onBlur={e => e.currentTarget.style.borderColor = theme.border.subtle}
                   />
-                  <span style={{
-                    position: "absolute",
-                    left: 14,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: theme.text.muted,
-                    fontSize: 14,
-                  }}>$</span>
                 </div>
-                <div style={hintStyle}>Минимум $10</div>
+                <div style={hintStyle}>Минимум 10</div>
               </div>
               <div>
                 <label style={labelStyle}>Макс. лимит (USD) *</label>
@@ -842,23 +831,12 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
                     max="1000"
                     step="0.01"
                     required
-                    style={{
-                      ...inputStyle,
-                      paddingLeft: 32,
-                    }}
+                    style={inputStyle}
                     onFocus={e => e.currentTarget.style.borderColor = theme.accent.primary}
                     onBlur={e => e.currentTarget.style.borderColor = theme.border.subtle}
                   />
-                  <span style={{
-                    position: "absolute",
-                    left: 14,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: theme.text.muted,
-                    fontSize: 14,
-                  }}>$</span>
                 </div>
-                <div style={hintStyle}>Максимум $1000</div>
+                <div style={hintStyle}>Максимум 1000</div>
               </div>
             </div>
 
