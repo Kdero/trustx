@@ -7,7 +7,7 @@ import { theme, Icon } from '../components/DashboardLayout';
 interface PaymentRequisite {
   id: number;
   payment_id: string;
-  currency: 'USD' | 'RUB';
+  currency: 'USD' | 'RUB' | 'UAH';
   method: string;
   country_name: string;
   country_flag: string;

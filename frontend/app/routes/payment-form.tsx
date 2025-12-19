@@ -19,7 +19,7 @@ interface Device {
 }
 
 interface FormData {
-  currency: 'USD' | 'RUB';
+  currency: 'USD' | 'RUB' | 'UAH';
   method: 'card' | 'sbp';
   country: number;
   bank: string;
@@ -651,6 +651,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onClose }) 
                 >
                   <option value="RUB">RUB (Россия)</option>
                   <option value="USD">USD (USA)</option>
+                  <option value="UAH">UAH (Украина)</option>
                 </select>
               </div>
               <div>
