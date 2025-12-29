@@ -18,6 +18,7 @@ interface PaymentRequisite {
   is_active: boolean;
   created_at: string;
   device_name?: string;
+  mode: 'in' | 'out';
 }
 
 interface EditingLimits {
@@ -25,6 +26,7 @@ interface EditingLimits {
   min_limit: string;
   max_limit: string;
   max_transactions: string;
+  mode: 'in' | 'out';
 }
 
 interface PaymentRequisitesListProps {
@@ -65,10 +67,11 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
       });
 
       if (response.data.success && response.data.requisites) {
-        // Add default max_transactions if not present
+        // Add default max_transactions and mode if not present
         const reqs = response.data.requisites.map((r: any) => ({
           ...r,
-          max_transactions: r.max_transactions || 100
+          max_transactions: r.max_transactions || 100,
+          mode: r.mode || 'in'
         }));
         setRequisites(reqs);
       }
@@ -119,6 +122,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
       min_limit: typeof req.min_limit === 'number' ? req.min_limit.toString() : req.min_limit,
       max_limit: typeof req.max_limit === 'number' ? req.max_limit.toString() : req.max_limit,
       max_transactions: (req.max_transactions || 100).toString(),
+      mode: req.mode || 'in',
     });
   };
 
@@ -179,6 +183,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
           min_limit: minLimit.toFixed(2),
           max_limit: maxLimit.toFixed(2),
           max_transactions: maxTransactions,
+          mode: editing.mode,
         },
         {
           headers: {
@@ -191,7 +196,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
       if (response.data.success) {
         setRequisites(prev => prev.map(r => 
           r.id === editing.id 
-            ? { ...r, min_limit: minLimit, max_limit: maxLimit, max_transactions: maxTransactions }
+            ? { ...r, min_limit: minLimit, max_limit: maxLimit, max_transactions: maxTransactions, mode: editing.mode }
             : r
         ));
         setEditing(null);
@@ -200,7 +205,7 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
       // If endpoint doesn't exist, just update locally
       setRequisites(prev => prev.map(r => 
         r.id === editing.id 
-          ? { ...r, min_limit: minLimit, max_limit: maxLimit, max_transactions: maxTransactions }
+          ? { ...r, min_limit: minLimit, max_limit: maxLimit, max_transactions: maxTransactions, mode: editing.mode }
           : r
       ));
       setEditing(null);
@@ -515,6 +520,81 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
                         {req.payment_id}
                       </div>
                     </div>
+                  </div>
+
+                  {/* Mode Toggle */}
+                  <div style={{
+                    background: theme.bg.input,
+                    borderRadius: 10,
+                    padding: 12,
+                    marginBottom: 12,
+                  }}>
+                    <div style={{ fontSize: 11, color: theme.text.muted, marginBottom: 8, textTransform: "uppercase" }}>
+                      Режим работы
+                    </div>
+                    {isEditing ? (
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <button
+                          onClick={() => setEditing({ ...editing, mode: 'in' })}
+                          style={{
+                            flex: 1,
+                            padding: "10px 12px",
+                            background: editing.mode === 'in' ? theme.accent.success : theme.bg.dark,
+                            color: editing.mode === 'in' ? 'white' : theme.text.muted,
+                            border: `1px solid ${editing.mode === 'in' ? theme.accent.success : theme.border.subtle}`,
+                            borderRadius: 8,
+                            fontSize: 13,
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 6,
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          <Icon name="arrow-down" size={14} />
+                          Приём (IN)
+                        </button>
+                        <button
+                          onClick={() => setEditing({ ...editing, mode: 'out' })}
+                          style={{
+                            flex: 1,
+                            padding: "10px 12px",
+                            background: editing.mode === 'out' ? theme.accent.warning : theme.bg.dark,
+                            color: editing.mode === 'out' ? 'white' : theme.text.muted,
+                            border: `1px solid ${editing.mode === 'out' ? theme.accent.warning : theme.border.subtle}`,
+                            borderRadius: 8,
+                            fontSize: 13,
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 6,
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          <Icon name="arrow-up" size={14} />
+                          Выплата (OUT)
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "6px 12px",
+                        borderRadius: 6,
+                        background: req.mode === 'out' ? `${theme.accent.warning}20` : `${theme.accent.success}20`,
+                        color: req.mode === 'out' ? theme.accent.warning : theme.accent.success,
+                        fontSize: 13,
+                        fontWeight: 600,
+                      }}>
+                        <Icon name={req.mode === 'out' ? "arrow-up" : "arrow-down"} size={14} />
+                        {req.mode === 'out' ? 'Выплата (OUT)' : 'Приём (IN)'}
+                      </div>
+                    )}
                   </div>
 
                   {/* Limits Section */}
