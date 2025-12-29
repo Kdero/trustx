@@ -133,12 +133,32 @@ export const PaymentRequisitesList: React.FC<PaymentRequisitesListProps> = ({
     const maxLimit = parseFloat(editing.max_limit);
     const maxTransactions = parseInt(editing.max_transactions);
 
-    if (minLimit < 10) {
-      alert('Минимальный лимит должен быть не менее $10');
+    // Найдем текущий реквизит для определения валюты
+    const currentRequisite = requisites.find(r => r.id === editing.id);
+    if (!currentRequisite) return;
+
+    // Курсы валют относительно доллара (примерные)
+    const exchangeRates: Record<string, number> = {
+      'USD': 1,
+      'RUB': 95,    // 1 USD ≈ 95 RUB
+      'UAH': 40,    // 1 USD ≈ 40 UAH
+    };
+
+    // Лимиты в соответствующей валюте (эквивалент $1000)
+    const maxLimitInCurrency = 1000 * (exchangeRates[currentRequisite.currency] || 1);
+    const minLimitInCurrency = 10 * (exchangeRates[currentRequisite.currency] || 1);
+
+    const currencySymbol = currentRequisite.currency === 'USD' ? '$' : 
+                          currentRequisite.currency === 'RUB' ? '₽' : 
+                          currentRequisite.currency === 'UAH' ? '₴' : 
+                          currentRequisite.currency;
+
+    if (minLimit < minLimitInCurrency) {
+      alert(`Минимальный лимит должен быть не менее ${currencySymbol}${minLimitInCurrency.toLocaleString('en-US', { minimumFractionDigits: 2 })} (≈$10)`);
       return;
     }
-    if (maxLimit > 10000) {
-      alert('Максимальный лимит не может превышать $10,000');
+    if (maxLimit > maxLimitInCurrency) {
+      alert(`Максимальный лимит не может превышать ${currencySymbol}${maxLimitInCurrency.toLocaleString('en-US', { minimumFractionDigits: 2 })} (≈$1,000)`);
       return;
     }
     if (minLimit >= maxLimit) {
